@@ -18,8 +18,10 @@ class DownloadMode(enum.Enum):
     skip = 3
 
 
+logging.basicConfig(level=logging.INFO)
+
+
 log = logging.getLogger(__name__)
-log.setLevel(level=logging.INFO)
 
 
 def map_row_values(d):
