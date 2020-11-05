@@ -6,6 +6,7 @@ import logging
 import enum
 import requests
 import argparse
+from clint.textui import progress
 
 file_template = "${source}_${operator}_${variable}_${frequency}_${resolution}_${start}_${end}.nc"
 
@@ -55,9 +56,12 @@ def download_file(url, local_filename):
         return
     with requests.get(url, stream=True) as r:
         r.raise_for_status()
+        total_length = int(r.headers.get('content-length'))
         with open(local_filename, 'wb') as f:
-            for chunk in r.iter_content(chunk_size=8192):
-                f.write(chunk)
+            for chunk in progress.bar(r.iter_content(chunk_size=8192), expected_size = (total_length / 1024) + 1):
+                if chunk:
+                    f.write(chunk)
+                    f.flush()
     return local_filename
 
 
