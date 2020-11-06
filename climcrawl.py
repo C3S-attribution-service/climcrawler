@@ -12,14 +12,14 @@ file_template = "${source}_${operator}_${variable}_${frequency}_${resolution}_${
 
 info_fields = ["source", "operator", "variable", "frequency", "resolution"]
 
+logging.basicConfig(level=logging.INFO)
+
 
 class DownloadMode(enum.Enum):
     replace = 1
     update = 2
     skip = 3
-
-
-logging.basicConfig(level=logging.INFO)
+    touch = 4
 
 
 log = logging.getLogger(__name__)
@@ -76,17 +76,22 @@ def download_files(files, target_dir, mode):
                 log.info("File %s already exists and will be replaced" % target)
                 os.remove(target)
                 download_file(source_url, target)
-            elif mode == DownloadMode.skip:
-                log.info("File %s already exists and will be skipped" % target)
             elif mode == DownloadMode.update:
                 if target.split('_')[-1].split('.')[0] == "now":
                     log.info("File %s will be updated" % target)
                     download_file(source_url, target)
                 else:
                     log.info("File %s already up to date and will be skipped" % target)
+            else:
+                log.info("File %s already exists and will be skipped" % target)
         else:
-            log.info("File %s not found and will be downloaded" % target)
-            download_file(source_url, target)
+            if mode == DownloadMode.touch:
+                log.info("File %s not found and will be created" % target)
+                f = open(target, 'w')
+                f.close()
+            else:
+                log.info("File %s not found and will be downloaded" % target)
+                download_file(source_url, target)
         flist.append(fname)
     return flist
 
@@ -105,7 +110,8 @@ def main(args=None):
                         , default=".")
     parser.add_argument("--url", metavar="URL", type=str, help="Base url to be prepended in the manifest file",
                         default="https://attribution.climate.copernicus.eu/")
-    parser.add_argument("--mode", metavar="MODE", type=str, default="skip", choices=["replace", "skip", "update"],
+    parser.add_argument("--mode", metavar="MODE", type=str, default="skip", choices=["replace", "skip", "update",
+                                                                                     "touch"],
                         help="MODE:replace|skip|update whenever file already exists locally")
     parser.add_argument("file", metavar="FILE.csv", type=str, help="File (csv) containing the data descriptions",
                         default="./csv/obs_datasets.csv")
