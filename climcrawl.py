@@ -77,7 +77,7 @@ def download_files(files, target_dir, mode):
                 os.remove(target)
                 download_file(source_url, target)
             elif mode == DownloadMode.update:
-                if target.split('_')[-1].split('.')[0] == "now":
+                if target.split('_')[-1].split('.')[0] == "present":
                     log.info("File %s will be updated" % target)
                     download_file(source_url, target)
                 else:
