@@ -28,8 +28,8 @@ CRU,v4.03,UEA,temperature,minimum,mon,2.5x2.5,global,yes,http://climexp.knmi.nl/
 CRU,v4.03,UEA,precipitation,total,mon,0.5x0.5,global,yes,http://climexp.knmi.nl/CRUData/cru_ts4.04.1901.2019.pre.dat.nc
 CRU,v4.03,UEA,precipitation,total,mon,1x1,global,yes,http://climexp.knmi.nl/CRUData/cru_ts4.04.1901.2019.pre.dat_1.nc
 CRU,v4.03,UEA,precipitation,total,mon,2.5x2.5,global,yes,http://climexp.knmi.nl/CRUData/cru_ts4.04.1901.2019.pre.dat_25.nc
-GPCC,v8.0,DWD,precipitation,total,mon,2.5x2.5,global,yes,http://climexp.knmi.nl/GPCCData/gpcc_25_combined.nc
-GPCC,v8.0,DWD,precipitation,total,mon,1x1,global,yes,http://climexp.knmi.nl/GPCCData/gpcc_10_combined.nc
-GPCC,v8.0,DWD,precipitation,total,mon,0.5x0.5,global,yes,http://climexp.knmi.nl/GPCCData/gpcc_05.nc
-GPCC,v8.0,DWD,precipitation,total,mon,0.25x0.25,global,yes,http://climexp.knmi.nl/GPCCData/gpcc_025.nc
-GPCC,v2.0,DWD,precipitation,total,day,1x1,global,yes,http://climexp.knmi.nl/GPCCData/gpcc_combined_daily.nc
+GPCC,v2020.0,DWD,precipitation,total,mon,2.5x2.5,global,yes,http://climexp.knmi.nl/GPCCData/gpcc_25_combined.nc
+GPCC,v2020.0,DWD,precipitation,total,mon,1x1,global,yes,http://climexp.knmi.nl/GPCCData/gpcc_10_combined.nc
+GPCC,v2020.0,DWD,precipitation,total,mon,0.5x0.5,global,yes,http://climexp.knmi.nl/GPCCData/gpcc_05.nc
+GPCC,v2020.0,DWD,precipitation,total,mon,0.25x0.25,global,yes,http://climexp.knmi.nl/GPCCData/gpcc_025.nc
+GPCC,v2020.0-v6.0-fg,DWD,precipitation,total,day,1x1,global,yes,http://climexp.knmi.nl/GPCCData/gpcc_combined_daily.nc
