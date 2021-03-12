@@ -122,7 +122,7 @@ def fix_time_units(ncfile, row):
                 run_options = ["ncap2", "-O", "-s", ncap2_option]
     ds.close()
     if any(run_options):
-        proc = subprocess.run(' '.join(run_options + [ncfile, ncfile]), capture_output=True, shell=True)
+        proc = subprocess.run(' '.join(run_options + [ncfile, ncfile]), shell=True)
     return ncfile
 
 
