@@ -1,35 +1,35 @@
-source,provider,variable,operator,frequency,resolution,start,end,url
-GISTEMP,NASA,temperature-anomaly,mean,mon,global,188001,present,https://climexp.knmi.nl/data/igiss_al_gl_m.nc
-GMLCO2,NOAA,co2,co2,mon,global,10101,present,https://climexp.knmi.nl/data/ico2_monthly.nc
-BERKEARTH,Berkeley,temperature-anomaly,mean,day,1x1,18800101,20180531,https://climexp.knmi.nl/BerkeleyData/TAVG_Daily_LatLong1_full.nc
-BERKEARTH,Berkeley,temperature-anomaly,maximum,day,1x1,18800102,20180532,https://climexp.knmi.nl/BerkeleyData/TMAX_Daily_LatLong1_full.nc
-BERKEARTH,Berkeley,temperature-anomaly,minimum,day,1x1,18800103,20180533,https://climexp.knmi.nl/BerkeleyData/TMIN_Daily_LatLong1_full.nc
-BERKEARTH,Berkeley,temperature-anomaly,mean,mon,1x1,175001,201907,https://climexp.knmi.nl/BerkeleyData/TAVG_LatLong1.nc
-BERKEARTH,Berkeley,temperature-anomaly,maximum,mon,1x1,175001,201907,https://climexp.knmi.nl/BerkeleyData/TMAX_LatLong1.nc
-BERKEARTH,Berkeley,temperature-anomaly,minimum,mon,1x1,175001,201907,https://climexp.knmi.nl/BerkeleyData/TMIN_LatLong1.nc
-CHIRPS,USGS,precipitation,mean,day,0.25x0.25,19810101,20200630,https://climexp.knmi.nl/CHIRPSData/v2p0chirps_25.nc
-CPC,NOAA,precipitation,mean,day,0.5x0.5,19790101,present,https://climexp.knmi.nl/NCEPData/prcp_GLB_daily.nc
-CPC-CONUS,NOAA,precipitation,mean,day,0.25x0.25,19480101,present,https://climexp.knmi.nl/NCEPData/prcp_CONUS_daily.nc
-CPC-CONUS,NOAA,precipitation,mean,day,0.5x0.5,19480101,present,https://climexp.knmi.nl/NCEPData/prcp_CONUS_daily_05.nc
-IMERG,NASA,precipitation,mean,day,0.1x0.1,20090914,20160607,https://climexp.knmi.nl/GPMData/imerg_daily.nc
-IMERG,NASA,precipitation,mean,day,0.2x0.2,20090914,20160607,https://climexp.knmi.nl/GPMData/imerg_daily_02.nc
-IMERG,NASA,precipitation,mean,day,0.5x0.5,20090914,20160607,https://climexp.knmi.nl/GPMData/imerg_daily_05.nc
-CMORPH,NCEP,precipitation,mean,day,0.5x0.5,19980101,present,http://climexp.knmi.nl/NCEPData/cmorph_daily.nc
-CMORPH,NCEP,precipitation,mean,mon,0.5x0.5,199801,present,http://climexp.knmi.nl/NCEPData/cmorph_monthly.nc
-CRU4,UEA,temperature,mean,mon,0.5x0.5,190101,201912,http://climexp.knmi.nl/CRUData/cru_ts4.04.1901.2019.tmp.dat.nc
-CRU4,UEA,temperature,mean,mon,1x1,190101,201912,http://climexp.knmi.nl/CRUData/cru_ts4.04.1901.2019.tmp.dat_1.nc
-CRU4,UEA,temperature,mean,mon,2.5x2.5,190101,201912,http://climexp.knmi.nl/CRUData/cru_ts4.04.1901.2019.tmp.dat_25.nc
-CRU4,UEA,temperature,maximum,mon,0.5x0.5,190101,201912,http://climexp.knmi.nl/CRUData/cru_ts4.04.1901.2019.tmx.dat.nc
-CRU4,UEA,temperature,maximum,mon,1x1,190101,201912,http://climexp.knmi.nl/CRUData/cru_ts4.04.1901.2019.tmx.dat_1.nc
-CRU4,UEA,temperature,maximum,mon,2.5x2.5,190101,201912,http://climexp.knmi.nl/CRUData/cru_ts4.04.1901.2019.tmx.dat_25.nc
-CRU4,UEA,temperature,minimum,mon,0.5x0.5,190101,201912,http://climexp.knmi.nl/CRUData/cru_ts4.04.1901.2019.tmn.dat.nc
-CRU4,UEA,temperature,minimum,mon,1x1,190101,201912,http://climexp.knmi.nl/CRUData/cru_ts4.04.1901.2019.tmn.dat_1.nc
-CRU4,UEA,temperature,minimum,mon,2.5x2.5,190101,201912,http://climexp.knmi.nl/CRUData/cru_ts4.04.1901.2019.tmn.dat_25.nc
-CRU4,UEA,precipitation,mean,mon,0.5x0.5,190101,201912,http://climexp.knmi.nl/CRUData/cru_ts4.04.1901.2019.pre.dat.nc
-CRU4,UEA,precipitation,mean,mon,1x1,190101,201912,http://climexp.knmi.nl/CRUData/cru_ts4.04.1901.2019.pre.dat_1.nc
-CRU4,UEA,precipitation,mean,mon,2.5x2.5,190101,201912,http://climexp.knmi.nl/CRUData/cru_ts4.04.1901.2019.pre.dat_25.nc
-GPCC,DWD,precipitation,mean,mon,2.5x2.5,190101,present,http://climexp.knmi.nl/GPCCData/gpcc_25.nc
-GPCC,DWD,precipitation,mean,mon,1x1,190101,present,http://climexp.knmi.nl/GPCCData/gpcc_10.nc
-GPCC,DWD,precipitation,mean,mon,0.5x0.5,190101,present,http://climexp.knmi.nl/GPCCData/gpcc_05.nc
-GPCC,DWD,precipitation,mean,mon,0.25x0.25,190101,present,http://climexp.knmi.nl/GPCCData/gpcc_025.nc
-GPCC,DWD,precipitation,mean,day,1x1,190101,present,http://climexp.knmi.nl/GPCCData/gpcc_combined_daily.nc
+source,version,provider,variable,operator,frequency,resolution,region,updates,url
+GISTEMP,v4.0,NASA,temperature-anomaly,mean,mon,series,global,yes,https://climexp.knmi.nl/data/igiss_al_gl_m.nc
+GMLCO2,v1.0,NOAA,co2,co2,mon,series,global,yes,https://climexp.knmi.nl/data/ico2_monthly.nc
+BERKEARTH,v1.0,Berkeley Earth,temperature-anomaly,mean,day,1x1,global,yes,https://climexp.knmi.nl/BerkeleyData/TAVG_Daily_LatLong1_full.nc
+BERKEARTH,v1.0,Berkeley Earth,temperature-anomaly,maximum,day,1x1,global,yes,https://climexp.knmi.nl/BerkeleyData/TMAX_Daily_LatLong1_full.nc
+BERKEARTH,v1.0,Berkeley Earth,temperature-anomaly,minimum,day,1x1,global,yes,https://climexp.knmi.nl/BerkeleyData/TMIN_Daily_LatLong1_full.nc
+BERKEARTH,v1.0,Berkeley Earth,temperature-anomaly,mean,mon,1x1,global,yes,https://climexp.knmi.nl/BerkeleyData/TAVG_LatLong1.nc
+BERKEARTH,v1.0,Berkeley Earth,temperature-anomaly,maximum,mon,1x1,global,yes,https://climexp.knmi.nl/BerkeleyData/TMAX_LatLong1.nc
+BERKEARTH,v1.0,Berkeley Earth,temperature-anomaly,minimum,mon,1x1,global,yes,https://climexp.knmi.nl/BerkeleyData/TMIN_LatLong1.nc
+CHIRPS,v2.0,USGS-CHC,precipitation,total,day,0.25x0.25,africa,yes,https://climexp.knmi.nl/CHIRPSData/v2p0chirps_25.nc
+CPC,v1.0,NOAA,precipitation,total,day,0.5x0.5,global,yes,https://climexp.knmi.nl/NCEPData/prcp_GLB_daily.nc
+CPC-CONUS,v1.0,NOAA,precipitation,total,day,0.25x0.25,conus,yes,https://climexp.knmi.nl/NCEPData/prcp_CONUS_daily.nc
+CPC-CONUS,v1.0,NOAA,precipitation,total,day,0.5x0.5,conus,yes,https://climexp.knmi.nl/NCEPData/prcp_CONUS_daily_05.nc
+IMERG,v6.0,NASA,precipitation,total,day,0.1x0.1,global,yes,https://climexp.knmi.nl/GPMData/imerg_daily.nc
+IMERG,v6.0,NASA,precipitation,total,day,0.2x0.2,global,yes,https://climexp.knmi.nl/GPMData/imerg_daily_02.nc
+IMERG,v6.0,NASA,precipitation,total,day,0.5x0.5,global,yes,https://climexp.knmi.nl/GPMData/imerg_daily_05.nc
+CMORPH,v1.0,NCEP,precipitation,total,day,0.5x0.5,quasi-global,yes,http://climexp.knmi.nl/NCEPData/cmorph_daily.nc
+CMORPH,v1.0,NCEP,precipitation,total,mon,0.5x0.5,quasi-global,yes,http://climexp.knmi.nl/NCEPData/cmorph_monthly.nc
+CRU,v4.03,UEA,temperature,mean,mon,0.5x0.5,global,yes,http://climexp.knmi.nl/CRUData/cru_ts4.04.1901.2019.tmp.dat.nc
+CRU,v4.03,UEA,temperature,mean,mon,1x1,global,yes,http://climexp.knmi.nl/CRUData/cru_ts4.04.1901.2019.tmp.dat_1.nc
+CRU,v4.03,UEA,temperature,mean,mon,2.5x2.5,global,yes,http://climexp.knmi.nl/CRUData/cru_ts4.04.1901.2019.tmp.dat_25.nc
+CRU,v4.03,UEA,temperature,maximum,mon,0.5x0.5,global,yes,http://climexp.knmi.nl/CRUData/cru_ts4.04.1901.2019.tmx.dat.nc
+CRU,v4.03,UEA,temperature,maximum,mon,1x1,global,yes,http://climexp.knmi.nl/CRUData/cru_ts4.04.1901.2019.tmx.dat_1.nc
+CRU,v4.03,UEA,temperature,maximum,mon,2.5x2.5,global,yes,http://climexp.knmi.nl/CRUData/cru_ts4.04.1901.2019.tmx.dat_25.nc
+CRU,v4.03,UEA,temperature,minimum,mon,0.5x0.5,global,yes,http://climexp.knmi.nl/CRUData/cru_ts4.04.1901.2019.tmn.dat.nc
+CRU,v4.03,UEA,temperature,minimum,mon,1x1,global,yes,http://climexp.knmi.nl/CRUData/cru_ts4.04.1901.2019.tmn.dat_1.nc
+CRU,v4.03,UEA,temperature,minimum,mon,2.5x2.5,global,yes,http://climexp.knmi.nl/CRUData/cru_ts4.04.1901.2019.tmn.dat_25.nc
+CRU,v4.03,UEA,precipitation,total,mon,0.5x0.5,global,yes,http://climexp.knmi.nl/CRUData/cru_ts4.04.1901.2019.pre.dat.nc
+CRU,v4.03,UEA,precipitation,total,mon,1x1,global,yes,http://climexp.knmi.nl/CRUData/cru_ts4.04.1901.2019.pre.dat_1.nc
+CRU,v4.03,UEA,precipitation,total,mon,2.5x2.5,global,yes,http://climexp.knmi.nl/CRUData/cru_ts4.04.1901.2019.pre.dat_25.nc
+GPCC,v8.0,DWD,precipitation,total,mon,2.5x2.5,global,yes,http://climexp.knmi.nl/GPCCData/gpcc_25_combined.nc
+GPCC,v8.0,DWD,precipitation,total,mon,1x1,global,yes,http://climexp.knmi.nl/GPCCData/gpcc_10_combined.nc
+GPCC,v8.0,DWD,precipitation,total,mon,0.5x0.5,global,yes,http://climexp.knmi.nl/GPCCData/gpcc_05.nc
+GPCC,v8.0,DWD,precipitation,total,mon,0.25x0.25,global,yes,http://climexp.knmi.nl/GPCCData/gpcc_025.nc
+GPCC,v2.0,DWD,precipitation,total,day,1x1,global,yes,http://climexp.knmi.nl/GPCCData/gpcc_combined_daily.nc
