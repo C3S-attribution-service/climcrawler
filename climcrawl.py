@@ -214,9 +214,9 @@ def process_file(ncfile, row):
     ds.close()
 
 
-def download_files(rows, target_dir, mode):
+def download_files(rows, target_dir, mode, tmpdir=None):
     for row in rows:
-        tmpnc = tempfile.NamedTemporaryFile(suffix=".nc", delete=False)
+        tmpnc = tempfile.NamedTemporaryFile(suffix=".nc", delete=False, dir=tmpdir)
         if download_file(row["url"], tmpnc.name) is None:
             continue
         fix_time_units(tmpnc.name, row)
@@ -241,6 +241,7 @@ def main(args=None):
     parser.add_argument("--source", metavar="SRC", type=str, help="Filter on the source providers")
     parser.add_argument("--var", metavar="tmp|pr|co2", choices=["tmp", "pr", "co2"], type=str, help="Filter on variable (temperature or precipitation)")
     parser.add_argument("--freq", metavar="mon|day", choices=["mon", "day"], type=str, help="Filter on the time series frequency (monthly or daily)")
+    parser.add_argument("--tmpdir", metavar="DIR", type=str, default=None, help="Directory for temporary files (default: /tmp)")
     parser.add_argument("--file", metavar="FILE.csv", type=str, help="File (csv) containing the data descriptions",
                         default="./csv/obs_datasets.csv")
     args = parser.parse_args(args)
@@ -257,7 +258,7 @@ def main(args=None):
 
     filters = read_filters(args.source, args.var, args.freq)
     download_list = read_csv(input_file, filters)
-    download_files(download_list, target_dir=target_dir, mode=mode)
+    download_files(download_list, target_dir=target_dir, mode=mode, tmpdir=args.tmpdir)
 
 if __name__ == "__main__":
     main()
