@@ -207,7 +207,7 @@ def process_file(ncfile, row):
                 setattr(variable, "long_name", make_long_name(row))
             else:
                 setattr(variable, "long_name", make_long_name(row))
-    if rename_tuple is not None:
+    if rename_tuple is not None and rename_tuple[0] != rename_tuple[1]:
         ds.renameVariable(*rename_tuple)
     hist = getattr(ds, "history", "")
     setattr(ds, "history", "{}: climcrawler v0.1\n".format(datetime.datetime.now()) + hist)
