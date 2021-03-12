@@ -11,6 +11,7 @@ import subprocess
 import tqdm
 import netCDF4 as nc
 import datetime
+import shutil
 from dateutil.parser import parse
 from dateutil.relativedelta import relativedelta
 
@@ -225,7 +226,7 @@ def download_files(rows, target_dir, mode):
             log.info("File %s already up to date and will be skipped" % target)
             os.remove(tmpnc.name)
         else:
-            os.rename(tmpnc.name, target)
+            shutil.move(tmpnc.name, target)
             process_file(target, row)
 
 
