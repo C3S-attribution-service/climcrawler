@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import csv
+from os import path
 import string
 import os
 import logging
@@ -8,6 +9,7 @@ import requests
 import argparse
 import tempfile
 import subprocess
+from requests.models import Response
 import tqdm
 import netCDF4 as nc
 import datetime
@@ -15,9 +17,10 @@ import shutil
 from dateutil.parser import parse
 from dateutil.relativedelta import relativedelta
 
-file_template = "${source}_${operator}_${variable}_${frequency}_${resolution}_${region}_${start}_${end}_${version}.nc"
+obs_file_template = "${source}_${operator}_${variable}_${frequency}_${resolution}_${region}_${start}_${end}_${version}.nc"
+mod_file_template = "${source}_${operator}_${variable}_${frequency}_${resolution}_${region}_${experiment}_${member}_${start}_${end}_${version}.nc"
 
-info_fields = ["source", "operator", "variable", "frequency", "resolution", "version"]
+info_fields = ["source", "operator", "variable", "frequency", "resolution", "version", "member", "experiment"]
 
 logging.basicConfig(level=logging.INFO)
 
@@ -86,13 +89,14 @@ def read_csv(fname, filters):
 
 def download_file(url, local_filename):
     log.info("Downloading data from %s" % url)
-    if os.environ.get("CLIMCRAWL_DRYRUN", "False").lower() == "true":
-        return
     try:
         with requests.get(url, stream=True) as r:
             r.raise_for_status()
             total_length = int(r.headers.get('content-length', 0))
             chunk_size = 1024
+            if os.environ.get("CLIMCRAWL_DRYRUN", "False").lower() == "true":
+                log.info("Checked url {0}: OK".format(url))
+                return None
             progress_bar = tqdm.tqdm(total=total_length, unit='iB', unit_scale=True)
             with open(local_filename, 'wb') as f:
                 for chunk in r.iter_content(chunk_size):
@@ -146,7 +150,7 @@ def get_time_bounds(ncvar):
         return nc.num2date([ncvar[0],ncvar[-1]], ncvar.units, calendar=calendar)
 
 
-def get_file_name(ncfile, row):
+def get_file_name(ncfile, row, name_template):
     ds = nc.Dataset(ncfile, 'r')
     result = os.path.basename(ncfile)
     for varname, variable in ds.variables.items():
@@ -158,9 +162,10 @@ def get_file_name(ncfile, row):
                 tempdict["end"] = "present"
             else:
                 tempdict["end"] = bnds[1].strftime("%Y%m") if row["frequency"] == "mon" else bnds[1].strftime("%Y%m%d")
-            result = string.Template(file_template).substitute(tempdict)
+            result = string.Template(name_template).substitute(tempdict)
     ds.close()
     return result
+
 
 def make_long_name(row):
     timemap = {"day": "daily", "mon": "monthly", "year": "annual"}
@@ -214,13 +219,13 @@ def process_file(ncfile, row):
     ds.close()
 
 
-def download_files(rows, target_dir, mode, tmpdir=None):
+def download_files(rows, target_dir, mode, name_template, tmpdir=None):
     for row in rows:
         tmpnc = tempfile.NamedTemporaryFile(suffix=".nc", delete=False, dir=tmpdir)
         if download_file(row["url"], tmpnc.name) is None:
             continue
         fix_time_units(tmpnc.name, row)
-        fname = get_file_name(tmpnc.name, row)
+        fname = get_file_name(tmpnc.name, row, name_template)
         target = os.path.join(target_dir, fname)
         if os.path.isfile(target) and mode == DownloadMode.skip:
             log.info("File %s already up to date and will be skipped" % target)
@@ -258,7 +263,13 @@ def main(args=None):
 
     filters = read_filters(args.source, args.var, args.freq)
     download_list = read_csv(input_file, filters)
-    download_files(download_list, target_dir=target_dir, mode=mode, tmpdir=args.tmpdir)
+
+    if(os.path.basename(input_file).startswith('mod')):
+        name_template = mod_file_template
+    else:
+        name_template = obs_file_template
+
+    download_files(download_list, target_dir=target_dir, mode=mode, name_template=name_template, tmpdir=args.tmpdir)
 
 if __name__ == "__main__":
     main()
