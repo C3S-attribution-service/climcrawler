@@ -185,7 +185,7 @@ def process_file(ncfile, row):
             bnd_strings = [b.strftime("%Y-%m-%d %H:%M:%S") for b in bnds]
             setattr(ds,"time_coverage_start",bnd_strings[0])
             setattr(ds,"time_coverage_end",bnd_strings[1])
-        elif getattr(variable, "standard_name", "").lower() not in ["latitude", "longitude", "ensemble member"]:
+        elif getattr(variable, "standard_name", "").lower() not in ["", "latitude", "longitude", "ensemble member", "height"]:
             if row["variable"] == "temperature":
                 setattr(variable, "standard_name", "air_temperature")
                 newname = "tas"
