@@ -11,7 +11,9 @@ vars = {"tas": "mean temperature",
         "ssr": "mean surface-shortwave-radiation",
         "evspsbl": "total evaporation",
         "sfcWind": "mean surface-wind-speed",
-        "sfcWindmax": "maximum surface wind speed"}
+        "sfcWindmax": "maximum surface-wind-speed",
+        "uas": "mean eastward-surface-wind-speed",
+        "vas": "mean northward-surface-wind-speed"}
 
 freqs = {   "day": "day",
             "mon": "Amon"}
