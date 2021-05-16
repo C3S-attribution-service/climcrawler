@@ -61,7 +61,7 @@ def main(args=None):
                                             "20010101-20501231",
                                             "20510101-21001231"]
                         for time_span in time_spans:
-                            fname = "{0}_{1}_{2}_{3}_{4}_{5}.nc".format(varname, frequency, source, experiment, member, time_span)
+                            fname = "{0}_{1}_{2}_{3}_{4}_{5}.nc".format(varname, freqtag, source, experiment, member, time_span)
                             row = [ source,
                                     version,
                                     provider,
