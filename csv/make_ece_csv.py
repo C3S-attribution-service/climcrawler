@@ -48,6 +48,8 @@ def main(args=None):
             for freqname, freqtag in freqs.items():
                 frequency = freqname
                 for varname, vardescr in vars.items():
+                    if varname == "sfcWindmax" and frequency == "mon":
+                        continue
                     operator = vardescr.split(' ')[0]
                     variable = vardescr.split(' ')[1]
                     for mem in range(1,17):
