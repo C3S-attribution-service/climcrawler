@@ -8,7 +8,10 @@ vars = {"tas": "mean temperature",
         "pr": "total precipitation",
         "psl": "mean sea-level-pressure",
         "rsds": "mean surface-downward-shortwave-radiation",
-        "ssr": "mean surface-shortwave-radiation"}
+        "ssr": "mean surface-shortwave-radiation",
+        "evspsbl": "total evaporation",
+        "sfcWind": "mean surface-wind-speed",
+        "sfcWindmax": "maximum surface wind speed"}
 
 freqs = {   "day": "day",
             "mon": "Amon"}
