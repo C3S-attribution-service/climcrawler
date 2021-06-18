@@ -253,6 +253,7 @@ def download_files(rows, target_dir, mode, name_template, split_yrs=False, tmpdi
                 filelist = split_years(tmpnc.name, target + '_')
                 for filepath in filelist:
                     shutil.move(filepath, filepath[:-3] + "_" + row["version"] + ".nc")
+                os.remove(tmpnc.name)
             else:
                 shutil.move(tmpnc.name, target)
                 process_file(target, row)
@@ -260,7 +261,7 @@ def download_files(rows, target_dir, mode, name_template, split_yrs=False, tmpdi
 
 def split_years(fname, target):
     cdoapp = cdo.Cdo()
-    cdoapp.debug = True
+#    cdoapp.debug = True
     return cdoapp.splityear(input=fname, output=target)
 
 
