@@ -8,6 +8,7 @@ import shutil
 import string
 import tempfile
 
+import cdo
 import netCDF4 as nc
 import netcdftime
 import numpy as np
@@ -53,16 +54,16 @@ def map_row_values(d):
 
 
 def read_filters(sources, vars, freqs):
-    def remap(s):
-        if s.lower() in ["tmp", "tas", "t"]:
+    def remap(cell):
+        if cell.lower() in ["tmp", "tas", "t"]:
             return ["temperature", "temperature-anomaly"]
-        if s.lower() == "pr":
+        if cell.lower() == "pr":
             return ["precipitation"]
-        if s == "daily":
+        if cell == "daily":
             return ["day"]
-        if s == "monthly":
+        if cell == "monthly":
             return ["mon"]
-        return [s]
+        return [cell]
 
     result = {}
     for key, lst in zip(["source", "variable", "frequency"], [sources, vars, freqs]):
@@ -161,7 +162,10 @@ def get_time_bounds(ncvar):
         return nc.num2date([ncvar[0], ncvar[-1]], ncvar.units, calendar=calendar)
 
 
-def get_file_name(ncfile, row, name_template):
+def get_file_name(ncfile, row, name_template, split_years):
+    if split_years:
+        short_template = '_'.join(name_template.split('_')[:-3])
+        return string.Template(short_template).substitute(row)
     ds = nc.Dataset(ncfile, 'r')
     result = os.path.basename(ncfile)
     for varname, variable in ds.variables.items():
@@ -196,7 +200,7 @@ def process_file(ncfile, row):
             bnd_strings = [b.strftime("%Y-%m-%d %H:%M:%S") for b in bnds]
             setattr(ds, "time_coverage_start", bnd_strings[0])
             setattr(ds, "time_coverage_end", bnd_strings[1])
-        elif getattr(variable, "standard_name", "").lower() not in ["", "latitude", "longitude", "ensemble member",
+        elif getattr(variable, "standard_name", "").lower() not in ["latitude", "longitude", "ensemble member",
                                                                     "height"]:
             if row["variable"] == "temperature":
                 setattr(variable, "standard_name", "air_temperature")
@@ -210,6 +214,7 @@ def process_file(ncfile, row):
                 newname = "tas"
                 if row["operator"] in ["maximum", "minimum"]:
                     newname = newname + row["operator"][:3]
+                setattr(variable, "units", "degrees Celsius")
                 rename_tuple = (varname, newname)
                 setattr(variable, "long_name", make_long_name(row))
             elif row["variable"] == "precipitation":
@@ -231,20 +236,32 @@ def process_file(ncfile, row):
     ds.close()
 
 
-def download_files(rows, target_dir, mode, name_template, tmpdir=None):
+def download_files(rows, target_dir, mode, name_template, split_yrs=False, tmpdir=None):
     for row in rows:
         tmpnc = tempfile.NamedTemporaryFile(suffix=".nc", delete=False, dir=tmpdir)
         if download_file(row["url"], tmpnc.name) is None:
             continue
         fix_time_units(tmpnc.name, row)
-        fname = get_file_name(tmpnc.name, row, name_template)
+        fname = get_file_name(tmpnc.name, row, name_template, split_yrs)
         target = os.path.join(target_dir, fname)
         if os.path.isfile(target) and mode == DownloadMode.skip:
             log.info("File %s already up to date and will be skipped" % target)
             os.remove(tmpnc.name)
         else:
-            shutil.move(tmpnc.name, target)
-            process_file(target, row)
+            if split_yrs:
+                process_file(tmpnc.name, row)
+                filelist = split_years(tmpnc.name, target + '_')
+                for filepath in filelist:
+                    shutil.move(filepath, filepath[:-3] + "_" + row["version"] + ".nc")
+            else:
+                shutil.move(tmpnc.name, target)
+                process_file(target, row)
+
+
+def split_years(fname, target):
+    cdoapp = cdo.Cdo()
+    cdoapp.debug = True
+    return cdoapp.splityear(input=fname, output=target)
 
 
 def num2date(num_axis, units, calendar):
@@ -440,6 +457,7 @@ def main(args=None):
                         help="Filter on the time series frequency (monthly or daily)")
     parser.add_argument("--tmpdir", metavar="DIR", type=str, default=None,
                         help="Directory for temporary files (default: /tmp)")
+    parser.add_argument("--splityrs", action="store_true", help="Split files into yearly chunks")
     parser.add_argument("--file", metavar="FILE.csv", type=str, help="File (csv) containing the data descriptions",
                         default="./csv/obs_datasets.csv")
     args = parser.parse_args(args)
@@ -462,7 +480,8 @@ def main(args=None):
     else:
         name_template = obs_file_template
 
-    download_files(download_list, target_dir=target_dir, mode=mode, name_template=name_template, tmpdir=args.tmpdir)
+    download_files(download_list, target_dir=target_dir, mode=mode, name_template=name_template,
+                   split_yrs=args.splityrs, tmpdir=args.tmpdir)
 
 
 if __name__ == "__main__":
