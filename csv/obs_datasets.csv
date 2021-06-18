@@ -1,6 +1,5 @@
 source,version,provider,variable,operator,frequency,resolution,region,updates,url
 GISTEMP,v4.0,NASA,temperature-anomaly,mean,mon,series,global,yes,https://climexp.knmi.nl/data/igiss_al_gl_m.nc
-GMLCO2,v1.0,NOAA,co2,co2,mon,series,global,yes,https://climexp.knmi.nl/data/ico2_monthly.nc
 BERKEARTH,v1.0,Berkeley Earth,temperature-anomaly,mean,day,1x1,global,yes,https://climexp.knmi.nl/BerkeleyData/TAVG_Daily_LatLong1_full.nc
 BERKEARTH,v1.0,Berkeley Earth,temperature-anomaly,maximum,day,1x1,global,yes,https://climexp.knmi.nl/BerkeleyData/TMAX_Daily_LatLong1_full.nc
 BERKEARTH,v1.0,Berkeley Earth,temperature-anomaly,minimum,day,1x1,global,yes,https://climexp.knmi.nl/BerkeleyData/TMIN_Daily_LatLong1_full.nc
@@ -11,7 +10,6 @@ CHIRPS,v2.0,USGS-CHC,precipitation,total,day,0.25x0.25,africa,yes,https://climex
 CPC,v1.0,NOAA,precipitation,total,day,0.5x0.5,global,yes,https://climexp.knmi.nl/NCEPData/prcp_GLB_daily.nc
 CPC-CONUS,v1.0,NOAA,precipitation,total,day,0.25x0.25,conus,yes,https://climexp.knmi.nl/NCEPData/prcp_CONUS_daily.nc
 CPC-CONUS,v1.0,NOAA,precipitation,total,day,0.5x0.5,conus,yes,https://climexp.knmi.nl/NCEPData/prcp_CONUS_daily_05.nc
-IMERG,v6.0,NASA,precipitation,total,day,0.1x0.1,global,yes,https://climexp.knmi.nl/GPMData/imerg_daily.nc
 IMERG,v6.0,NASA,precipitation,total,day,0.2x0.2,global,yes,https://climexp.knmi.nl/GPMData/imerg_daily_02.nc
 IMERG,v6.0,NASA,precipitation,total,day,0.5x0.5,global,yes,https://climexp.knmi.nl/GPMData/imerg_daily_05.nc
 CMORPH,v1.0,NCEP,precipitation,total,day,0.5x0.5,quasi-global,yes,http://climexp.knmi.nl/NCEPData/cmorph_daily.nc
