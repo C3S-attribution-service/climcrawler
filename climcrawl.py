@@ -117,12 +117,19 @@ def download_file(url, local_filename):
 
 def fix_time_units(ncfile, row):
     ds = nc.Dataset(ncfile, 'r+')
+    if row is None:
+        tokens = os.path.basename(ncfile).split('_')
+        source_ = tokens[0]
+        frequency_ = tokens[3]
+    else:
+        source_ = row["source"]
+        frequency_ = row["frequency"]
     for varname, variable in ds.variables.items():
         if getattr(variable, "standard_name", "").lower() == "time" or varname.lower() == "time":
-            units, freq = variable.units.strip().lower(), row["frequency"]
+            units, freq = variable.units.strip().lower(), frequency_
             #            substring_index = units.index("since") + 5
             if units.split(' ')[0] in ['years', 'months']:
-                log.info("Changing time units for {} {} data...".format(row["source"], row["frequency"]))
+                log.info("Changing time units for {} {} data...".format(source_, frequency_))
                 substring_index = units.index("since") + 5
                 refyearstr = units[substring_index:].strip().split(' ')[0].split('-')[0]
                 refyear = int(refyearstr)
@@ -162,8 +169,8 @@ def get_time_bounds(ncvar):
         return nc.num2date([ncvar[0], ncvar[-1]], ncvar.units, calendar=calendar)
 
 
-def get_file_name(ncfile, row, name_template, split_years):
-    if split_years:
+def get_file_name(ncfile, row, name_template, split_yrs):
+    if split_yrs:
         short_template = '_'.join(name_template.split('_')[:-3])
         return string.Template(short_template).substitute(row)
     ds = nc.Dataset(ncfile, 'r')
@@ -194,6 +201,15 @@ def process_file(ncfile, row):
     log.info("Correcting metadata for file {}".format(ncfile))
     ds = nc.Dataset(ncfile, 'r+')
     rename_tuple = None
+    if row is None:
+        tokens = os.path.basename(ncfile).split('_')
+        operator_ = tokens[1]
+        variable_ = tokens[2]
+        frequency_ = tokens[3]
+    else:
+        operator_ = row["operator"]
+        variable_ = row["variable"]
+        frequency_ = row["frequency"]
     for varname, variable in ds.variables.items():
         if getattr(variable, "standard_name", "").lower() == "time" or varname.lower() == "time":
             bnds = get_time_bounds(variable)
@@ -202,28 +218,28 @@ def process_file(ncfile, row):
             setattr(ds, "time_coverage_end", bnd_strings[1])
         elif getattr(variable, "standard_name", "").lower() not in ["latitude", "longitude", "ensemble member",
                                                                     "height"]:
-            if row["variable"] == "temperature":
+            if variable_ == "temperature":
                 setattr(variable, "standard_name", "air_temperature")
                 newname = "tas"
-                if row["operator"] in ["maximum", "minimum"]:
-                    newname = newname + row["operator"][:3]
+                if operator_ in ["maximum", "minimum"]:
+                    newname = newname + operator_[:3]
                 rename_tuple = (varname, newname)
                 setattr(variable, "long_name", make_long_name(row))
-            elif row["variable"] == "temperature-anomaly":
+            elif variable_ == "temperature-anomaly":
                 setattr(variable, "standard_name", "air_temperature_anomaly")
                 newname = "tas"
-                if row["operator"] in ["maximum", "minimum"]:
-                    newname = newname + row["operator"][:3]
+                if operator_ in ["maximum", "minimum"]:
+                    newname = newname + operator_[:3]
                 setattr(variable, "units", "degrees Celsius")
                 rename_tuple = (varname, newname)
                 setattr(variable, "long_name", make_long_name(row))
-            elif row["variable"] == "precipitation":
+            elif variable_ == "precipitation":
                 setattr(variable, "standard_name", "lwe_precipitation_rate")
-                if row["frequency"] == "day":
+                if frequency_ == "day":
                     setattr(variable, "units", "mm/day")
-                elif row["frequency"] == "mon":
+                elif frequency_ == "mon":
                     setattr(variable, "units", "mm/month")
-                elif row["frequency"] == "year":
+                elif frequency_ == "year":
                     setattr(variable, "units", "mm/year")
                 rename_tuple = (varname, "pr")
                 setattr(variable, "long_name", make_long_name(row))
@@ -242,8 +258,7 @@ def download_files(rows, target_dir, mode, name_template, split_yrs=False, tmpdi
         if download_file(row["url"], tmpnc.name) is None:
             continue
         fix_time_units(tmpnc.name, row)
-        fname = get_file_name(tmpnc.name, row, name_template, split_yrs)
-        target = os.path.join(target_dir, fname)
+        target = os.path.join(target_dir, get_file_name(tmpnc.name, row, name_template, split_yrs))
         if os.path.isfile(target) and mode == DownloadMode.skip:
             log.info("File %s already up to date and will be skipped" % target)
             os.remove(tmpnc.name)
@@ -257,6 +272,33 @@ def download_files(rows, target_dir, mode, name_template, split_yrs=False, tmpdi
             else:
                 shutil.move(tmpnc.name, target)
                 process_file(target, row)
+
+
+def reprocess_local_files(target_dir, split_yrs=False):
+    for ncfile in os.listdir(target_dir):
+        filepath = os.path.join(target_dir, ncfile)
+        if not os.path.isfile(filepath) or not ncfile.endswith(".nc"):
+            continue
+        log.info("Post-processing file {}...".format(filepath))
+        tokens = ncfile[:-3].split('_')
+        target = os.path.join(target_dir, '_'.join(tokens[:-3]))
+        fix_time_units(filepath, None)
+        version = tokens[-1]
+        if split_yrs:
+#            process_file(filepath, None)
+            startyr = int(tokens[-3][:4])
+            endyr = datetime.datetime.now().year if tokens[-2] == "present" else int(tokens[-2][:4])
+            new_file = '_'.join([target, str(startyr), version]) + ".nc"
+            if startyr == endyr and filepath != new_file:
+                shutil.move(filepath, new_file)
+            else:
+                filelist = split_years(filepath, target + '_')
+                for yearly_file_path in filelist:
+                    if yearly_file_path != filepath:
+                        shutil.move(yearly_file_path, yearly_file_path[:-3] + "_" + version + ".nc")
+                os.remove(filepath)
+#        else:
+#            process_file(ncfile, None)
 
 
 def split_years(fname, target):
@@ -449,8 +491,8 @@ def main(args=None):
                                                  "for CDS")
     parser.add_argument("--dir", metavar="DIR", type=str, help="Download directory, will be created if not existing",
                         default=".")
-    parser.add_argument("--mode", metavar="MODE", type=str, default="replace", choices=["replace", "skip"],
-                        help="MODE:replace|skip whenever file already exists locally")
+    parser.add_argument("--mode", metavar="MODE", type=str, default="replace", choices=["replace", "skip", "postproc"],
+                        help="MODE:replace|skip|postproc whenever file already exists locally")
     parser.add_argument("--source", metavar="SRC", type=str, help="Filter on the source providers")
     parser.add_argument("--var", metavar="tmp|pr|co2", choices=["tmp", "pr", "co2"], type=str,
                         help="Filter on variable (temperature or precipitation)")
@@ -462,6 +504,11 @@ def main(args=None):
     parser.add_argument("--file", metavar="FILE.csv", type=str, help="File (csv) containing the data descriptions",
                         default="./csv/obs_datasets.csv")
     args = parser.parse_args(args)
+
+    if args.mode == "postproc":
+        print("Hallo?")
+        reprocess_local_files(os.path.abspath(args.dir), args.splityrs)
+        return
 
     input_file = args.file
     if not os.path.isfile(input_file):
