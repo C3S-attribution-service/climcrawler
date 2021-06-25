@@ -274,11 +274,12 @@ def download_files(rows, target_dir, mode, name_template, split_yrs=False, tmpdi
                 process_file(target, row)
 
 
-def reprocess_local_files(target_dir, split_yrs=False):
+def reprocess_local_files(target_dir, split_yrs=False, tmpdir=None):
     ncfiles = [f for f in os.listdir(target_dir) if f.endswith(".nc") and
                os.path.isfile(os.path.join(target_dir, f))]
     for ncfile in ncfiles:
-        filepath = os.path.join(target_dir, ncfile)
+        filepath = os.path.join(tmpdir, ncfile)
+        shutil.move(os.path.join(target_dir, ncfile), filepath)
         log.info("Post-processing file {}...".format(filepath))
         tokens = ncfile[:-3].split('_')
         target = os.path.join(target_dir, '_'.join(tokens[:-3]))
@@ -507,7 +508,7 @@ def main(args=None):
 
     if args.mode == "postproc":
         print("Hallo?")
-        reprocess_local_files(os.path.abspath(args.dir), args.splityrs)
+        reprocess_local_files(os.path.abspath(args.dir), args.splityrs, args.tmpdir)
         return
 
     input_file = args.file
