@@ -295,7 +295,7 @@ def reprocess_local_files(target_dir, split_yrs=False, tmpdir=None):
             else:
                 filelist = split_years(filepath, target + '_')
                 for yearly_file_path in filelist:
-                    if yearly_file_path != filepath:
+                    if not yearly_file_path.endswith("_" + version + ".nc"):
                         shutil.move(yearly_file_path, yearly_file_path[:-3] + "_" + version + ".nc")
                 os.remove(filepath)
 #        else:
