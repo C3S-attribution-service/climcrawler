@@ -275,10 +275,10 @@ def download_files(rows, target_dir, mode, name_template, split_yrs=False, tmpdi
 
 
 def reprocess_local_files(target_dir, split_yrs=False):
-    for ncfile in os.listdir(target_dir):
+    ncfiles = [f for f in os.listdir(target_dir) if f.endswith(".nc") and
+               os.path.isfile(os.path.join(target_dir, f))]
+    for ncfile in ncfiles:
         filepath = os.path.join(target_dir, ncfile)
-        if not os.path.isfile(filepath) or not ncfile.endswith(".nc"):
-            continue
         log.info("Post-processing file {}...".format(filepath))
         tokens = ncfile[:-3].split('_')
         target = os.path.join(target_dir, '_'.join(tokens[:-3]))
