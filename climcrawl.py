@@ -267,7 +267,8 @@ def download_files(rows, target_dir, mode, name_template, split_yrs=False, tmpdi
                 process_file(tmpnc.name, row)
                 filelist = split_years(tmpnc.name, target + '_')
                 for filepath in filelist:
-                    shutil.move(filepath, filepath[:-3] + "_" + row["version"] + ".nc")
+                    if not filepath.endswith("_" + row["version"] + ".nc"):
+                        shutil.move(filepath, filepath[:-3] + "_" + row["version"] + ".nc")
                 os.remove(tmpnc.name)
             else:
                 shutil.move(tmpnc.name, target)
